@@ -6,7 +6,7 @@
     if (!loggedin()) {
         header("location: /admin/login.php");
         exit;
-    } 
+    }
 
     if (!empty($_POST)) {
         $quiz_id = $_POST["quiz_id"];
@@ -22,6 +22,9 @@
         echo "This quizrun doesn't exist.";
         exit;
     }
+
+    $questions = get_questions_for_quizrun($quizrun_id);
+    
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +34,25 @@
     <link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body class="admin-run">
-    <span class="access-code"><?php echo $quizrun["access_code"]; ?></span>
+    <h1 class="access-code">Code: <?php echo $quizrun["access_code"]; ?></h1>
+    <?php if ($quizrun["active"]) {
+        $current_question = get_question($quizrun["current_question"]);
+        $question = json_decode($current_question); ?>
+        <div class="question">
+            <p><?php echo $question->question ?></p>
+            <ol>
+                <?php for ($i=0; $i < count($question->answers); $i++) { 
+                    echo "<li>" . $question->answers[$i] . "</li>";    
+                } ?>
+            </ol>
+        </div>
+
+        <form method="POST" action="/admin/quizrun_next.php">
+            <input type="hidden" name="quizrun" value="<?php echo $quizrun_id ?>" />
+            <input type="submit" value="volgende" />
+        </form>
+    <?php } else { ?>
+        <h1>Einde</h1>
+    <?php } ?>
 </body>
 </html>

@@ -42,6 +42,10 @@
 </head>
 <body>
     <h1><?php echo $title; ?></h1>
+    <form method="POST" action="quizrun.php">
+        <input type="hidden" name="quiz_id" value="<?php echo $quiz_id ?>" />
+        <input type="submit" value="Start quiz" />
+    </form>
     <?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
         $id = $quiz["id"];
         $question = $quiz["question"];
