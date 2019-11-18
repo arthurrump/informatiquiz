@@ -48,8 +48,16 @@
                     } ?>
                 </ol>
             </div>
-        <?php } ?>
-        
+        <?php } 
+        if (!!($answers = get_answers_for_quizrun_question($quizrun["id"], $quizrun["current_question"]))) {
+            echo "<h2>Resultaten</h2><ul>";
+            foreach ($answers as $a) {
+                echo "<li>" . (intval($a["answer"]) + 1) . ": " . $a["count"] . "</li>";
+            }
+            echo "</ul>";
+        }
+        ?>
+
         <form method="POST" action="/admin/quizrun_next.php">
             <input type="hidden" name="quizrun" value="<?php echo $quizrun_id ?>" />
             <input type="submit" value="volgende" />

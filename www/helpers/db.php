@@ -435,4 +435,34 @@ function get_questions_for_quizrun($quizrun_id) {
 
     return $results;
 }
+
+function get_answers_for_quizrun_question($quizrun_id, $question_id) {
+    $db = get_database_connection();
+
+    if (!($stmt = $db->prepare("SELECT answer, COUNT(DISTINCT user) FROM answers WHERE quizrun_id = ? AND question_id = ? GROUP BY answer ORDER BY answer"))) {
+        db_error($db, "Preparing failed");
+    }
+
+    if (!$stmt->bind_param("ii", $quizrun_id, $question_id)) {
+        db_error($db, "Binding parameters failed");
+    }
+
+    if (!$stmt->execute()) {
+        db_error($db, "Execute failed");
+    }
+
+    if (!$stmt->bind_result($answer, $count)) {
+        db_error($db, "Binding output parameters failed");
+    }
+
+    $results = array();
+    while ($stmt->fetch()) {
+        $results[] = array("answer" => $answer, "count" => $count);
+    }
+
+    $stmt->close();
+    $db->close();
+
+    return $results;
+}
 ?>
