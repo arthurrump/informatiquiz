@@ -1,6 +1,7 @@
 <?php
     session_start();
     include("helpers/db.php");
+    include("helpers/Parsedown.php");
     
     if (!($quiz_run = get_active_quizrun_by_code($_GET["quiz"]))) {
         http_response_code(404);
@@ -19,6 +20,8 @@
         header("location: /quiz.php?quiz=$quizcode&answered=$question_id");
         exit;
     }
+
+    $parsedown = new Parsedown();
 ?>
 
 <!DOCTYPE html>
@@ -39,14 +42,14 @@
             $current_question = get_question($quiz_run["current_question"]);
             $question = json_decode($current_question); ?>
             <div class="question">
-                <p><?php echo $question->question ?></p>
+                <?php echo $parsedown->text($question->question) ?>
                 <form method="POST">
                     <?php 
                         echo "<input type=\"hidden\" name=\"question\" value=\"" . $quiz_run["current_question"] . "\" />";
                         echo "<input type=\"hidden\" name=\"quiz\" value=\"" . $quiz_run["id"] . "\" />";
                         echo "<input type=\"hidden\" name=\"quizcode\" value=\"" . $quiz_run["access_code"] . "\" />";
                         for ($i=0; $i < count($question->answers); $i++) { 
-                            echo "<input type=\"radio\" name=\"answer\" value=\"$i\">" . $question->answers[$i] . "</input>";    
+                            echo "<p><input type=\"radio\" name=\"answer\" value=\"$i\" />" . $parsedown->line($question->answers[$i]) . "</p>";    
                         } 
                     ?>
                     <input type="submit" value="Beantwoorden" />

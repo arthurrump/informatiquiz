@@ -2,6 +2,7 @@
     session_start();
     include("../helpers/session.php");
     include("../helpers/db.php");
+    include("../helpers/Parsedown.php");
 
     if (!loggedin()) {
         header("location: /admin/login.php");
@@ -25,6 +26,7 @@
 
     $questions = get_questions_for_quizrun($quizrun_id);
     
+    $parsedown = new Parsedown();
 ?>
 
 <!DOCTYPE html>
@@ -36,17 +38,18 @@
 <body class="admin-run">
     <h1 class="access-code">Code: <?php echo $quizrun["access_code"]; ?></h1>
     <?php if ($quizrun["active"]) {
-        $current_question = get_question($quizrun["current_question"]);
-        $question = json_decode($current_question); ?>
-        <div class="question">
-            <p><?php echo $question->question ?></p>
-            <ol>
-                <?php for ($i=0; $i < count($question->answers); $i++) { 
-                    echo "<li>" . $question->answers[$i] . "</li>";    
-                } ?>
-            </ol>
-        </div>
-
+        if (!!($current_question = get_question($quizrun["current_question"]))) {
+            $question = json_decode($current_question); ?>
+            <div class="question">
+                <?php echo $parsedown->text($question->question); ?>
+                <ol>
+                    <?php for ($i=0; $i < count($question->answers); $i++) { 
+                        echo "<li>" . $parsedown->line($question->answers[$i]) . "</li>";    
+                    } ?>
+                </ol>
+            </div>
+        <?php } ?>
+        
         <form method="POST" action="/admin/quizrun_next.php">
             <input type="hidden" name="quizrun" value="<?php echo $quizrun_id ?>" />
             <input type="submit" value="volgende" />
