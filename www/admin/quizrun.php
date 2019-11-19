@@ -32,7 +32,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <title>Admin - PHPQuiz</title>
+    <title>Admin - Informatiquiz</title>
     <link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body class="admin-run">

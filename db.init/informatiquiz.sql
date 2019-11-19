@@ -19,10 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `phpquiz`
+-- Database: `Informatiquiz`
 --
-CREATE DATABASE IF NOT EXISTS `phpquiz` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `phpquiz`;
+CREATE DATABASE IF NOT EXISTS `informatiquiz` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `informatiquiz`;
 
 -- --------------------------------------------------------
 

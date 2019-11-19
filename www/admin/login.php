@@ -33,7 +33,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <title>Admin Login - PHPQuiz</title>
+    <title>Admin Login - Informatiquiz</title>
     <link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body>

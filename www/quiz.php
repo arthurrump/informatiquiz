@@ -27,11 +27,11 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <title>PHPQuiz</title>
+    <title>Informatiquiz</title>
     <link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body>
-    <h1>PHPQuiz</h1>
+    <h1>Informatiquiz</h1>
 
     <?php
         if ($quiz_run["current_question"] == 0) {

@@ -27,7 +27,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <title>Admin Register - PHPQuiz</title>
+    <title>Admin Register - Informatiquiz</title>
     <link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body>

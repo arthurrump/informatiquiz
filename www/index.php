@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <title>PHPQuiz</title>
+    <title>Informatiquiz</title>
     <link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body>
-    <h1>PHPQuiz</h1>
+    <h1>Informatiquiz</h1>
     <form submit="GET" action="quiz.php">
         <fieldset>
             <legend>Quizcode</legend>
