@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Nov 18, 2019 at 04:30 PM
+-- Generation Time: Nov 19, 2019 at 08:34 AM
 -- Server version: 10.3.20-MariaDB
 -- PHP Version: 7.2.22
 
@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
 CREATE TABLE IF NOT EXISTS `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `quiz_id` int(11) NOT NULL,
+  `order` int(11) NOT NULL,
   `question` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `quiz_id` (`quiz_id`)
@@ -80,8 +81,10 @@ CREATE TABLE IF NOT EXISTS `quizrun` (
   `access_code` int(11) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `quiz_id` int(11) NOT NULL,
+  `current_question` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `quiz_id` (`quiz_id`)
+  KEY `quiz_id` (`quiz_id`),
+  KEY `current_question` (`current_question`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -125,7 +128,8 @@ ALTER TABLE `quizes`
 -- Constraints for table `quizrun`
 --
 ALTER TABLE `quizrun`
-  ADD CONSTRAINT `quizrun_ibfk_1` FOREIGN KEY (`quiz_id`) REFERENCES `quizes` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `quizrun_ibfk_1` FOREIGN KEY (`quiz_id`) REFERENCES `quizes` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `quizrun_ibfk_2` FOREIGN KEY (`current_question`) REFERENCES `questions` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
