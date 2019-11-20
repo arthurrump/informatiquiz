@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Nov 19, 2019 at 08:34 AM
+-- Generation Time: Nov 20, 2019 at 11:12 AM
 -- Server version: 10.3.20-MariaDB
--- PHP Version: 7.2.22
+-- PHP Version: 7.2.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
 CREATE TABLE IF NOT EXISTS `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `quiz_id` int(11) NOT NULL,
-  `order` int(11) NOT NULL,
+  `order` int(11) NOT NULL DEFAULT 0,
   `question` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `quiz_id` (`quiz_id`)
