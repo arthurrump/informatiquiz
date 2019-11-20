@@ -64,9 +64,29 @@ $parsedown = new Parsedown();
             }
             echo "</ul>";
         } elseif ($question->type === "html") {
-            foreach ($answers as $a) {
-                echo "<fieldset> <legend>Antwoord </legend> HTML Code: <br> <code>" . htmlspecialchars($a["answer"]) . "</code><br><br> Browser: <br>" . $a["answer"] . "</fieldset>";
-            }
+            libxml_use_internal_errors(true);
+
+            foreach ($answers as $a) { ?>
+
+            <fieldset>
+                <legend>Antwoord</legend>
+                HTML Code: <br>
+                <code>
+                    <?php echo htmlspecialchars($a["answer"]); ?>
+                </code>
+                <br><br> Browser: <br>
+                <?php
+                    $doc = new DOMDocument();
+                    $doc->loadHTML($a["answer"]);
+                    if (libxml_get_errors()) {
+                        echo "Geen valide HTML!!";
+                        libxml_clear_errors();
+                    } else {
+                        echo $a["answer"];
+                    }
+                ?>
+            </fieldset>
+            <?php }
         }
     }
     ?>
