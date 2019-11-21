@@ -17,6 +17,7 @@ if (!($title = get_quiz_title($quiz_id))) {
 
 $errors = array();
 if (!empty($_POST)) {
+
     $question = $_POST["question"];
     $correct = $_POST["correct"];
 
@@ -31,13 +32,11 @@ if (!empty($_POST)) {
     if (empty($errors)) {
 
         if ($_POST["type"] === "Voeg meerkeuze vraag toe") {
-            // Mulitple choice
-            $answers = array($_POST["answer1"], $_POST["answer2"], $_POST["answer3"], $_POST["answer4"]);
-
+            // Multiple choice, with 2+ answer options
             $q = array(
                 "type" => "mc",
                 "question" => $question,
-                "answers" => $answers,
+                "answers" => $_POST['answer'],
                 "correct" => $correct);
             create_question_for_quiz($quiz_id, json_encode($q));
         } else {
@@ -63,6 +62,7 @@ if (!empty($_POST)) {
 <form method="POST" action="quizrun.php">
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id ?>"/>
     <input type="submit" value="Start quiz"/>
+    <script type="text/javascript" src="js/quiz.js"></script>
 </form>
 <?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
     $id = $quiz["id"];
@@ -90,18 +90,17 @@ if (!empty($_POST)) {
         </fieldset>
         <fieldset>
             <legend>Antwoordmogelijkheden</legend>
-            <textarea name="answer1"></textarea>
-            <textarea name="answer2"></textarea>
-            <textarea name="answer3"></textarea>
-            <textarea name="answer4"></textarea>
+            <article class="answer">
+                <input type="radio" name="correct" value="1">
+                <textarea spellcheck="true" name="answer[]"></textarea>
+            </article>
+            <article class="answer">
+                <input type="radio" name="correct" value="2">
+                <textarea spellcheck="true" name="answer[]"></textarea>
+            </article>
+            <button id="add_answer" type="button" onclick="addOption(this)"> Optie toevoegen</button>
         </fieldset>
-        <fieldset>
-            <legend>Goede antwoord</legend>
-            <input type="radio" name="correct" value="1">1</input>
-            <input type="radio" name="correct" value="2">2</input>
-            <input type="radio" name="correct" value="3">3</input>
-            <input type="radio" name="correct" value="4">4</input>
-        </fieldset>
+
         <input type="submit" name="type" value="Voeg meerkeuze vraag toe"/>
     </form>
 

@@ -50,7 +50,7 @@ if ($quiz_run["current_question"] == 0) {
 
             // Check for type of question (mc or html)
             if ($question->type === "mc") {
-                for ($i = 0; $i < count($question->answers); $i++) {
+                for ($i = 0; $i < sizeof($question->answers); $i++) {
                     echo "<p><input type=\"radio\" name=\"answer\" value=\"$i\" />" . $parsedown->line($question->answers[$i]) . "</p>";
                 }
             } else if ($question->type === "html") {

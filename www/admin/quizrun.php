@@ -48,8 +48,8 @@ $parsedown = new Parsedown();
         <ol>
             <?php
             if ($question->type === "mc") {
-                for ($i = 0; $i < count($question->answers); $i++) {
-                    echo "<li>" . $parsedown->line($question->answers[$i]) . "</li>";
+                foreach ($question->answers as $answer) {
+                    echo "<li>" . $parsedown->line($answer) . "</li>";
                 }
             }
             ?>
