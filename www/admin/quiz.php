@@ -67,7 +67,7 @@ if (!empty($_POST)) {
 <?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
     $id = $quiz["id"];
     $question = $quiz["question"];
-    echo "$question<br/>";
+    echo htmlspecialchars($question) . "<br/>";
 } ?>
 
 <h2>Nieuwe vraag</h2>
@@ -119,7 +119,7 @@ if (!empty($_POST)) {
         </fieldset>
         <fieldset>
             <legend>Goede HTML antwoord</legend>
-            <input type="text" name="correct">
+            <textarea name="correct"></textarea>
         </fieldset>
         <input type="submit" name="type" value="Voeg open vraag (HTML) toe"/>
     </form>

@@ -42,7 +42,9 @@ $parsedown = new Parsedown();
     if (!!($current_question = get_question($quizrun["current_question"]))) {
         $question = json_decode($current_question); ?>
         <div class="question">
-        <?php echo $parsedown->text($question->question); ?>
+        <h3>
+            <?php echo "Vraag " . $quizrun["current_question"] . ": " . $parsedown->text($question->question); ?>
+        </h3>
         <ol>
             <?php
             if ($question->type === "mc") {
@@ -67,25 +69,24 @@ $parsedown = new Parsedown();
             libxml_use_internal_errors(true);
 
             foreach ($answers as $a) { ?>
-
-            <fieldset>
-                <legend>Antwoord</legend>
-                HTML Code: <br>
-                <code>
-                    <?php echo htmlspecialchars($a["answer"]); ?>
-                </code>
-                <br><br> Browser: <br>
-                <?php
-                    $doc = new DOMDocument();
-                    $doc->loadHTML($a["answer"]);
-                    if (libxml_get_errors()) {
-                        echo "Geen valide HTML!!";
-                        libxml_clear_errors();
-                    } else {
-                        echo $a["answer"];
-                    }
-                ?>
-            </fieldset>
+                <fieldset>
+                    <legend>Antwoord</legend>
+                    HTML Code: <br>
+                    <code>
+                        <?php echo htmlspecialchars($a["answer"]); ?>
+                    </code>
+                    <br><br> Browser: <br>
+                    <?php
+                        $doc = new DOMDocument();
+                        $doc->loadHTML($a["answer"]);
+                        if (libxml_get_errors()) {
+                            echo "Geen valide HTML!!";
+                            libxml_clear_errors();
+                        } else {
+                            echo $a["answer"];
+                        }
+                    ?>
+                </fieldset>
             <?php }
         }
     }
@@ -93,7 +94,7 @@ $parsedown = new Parsedown();
 
     <form method="POST" action="/admin/quizrun_next.php">
         <input type="hidden" name="quizrun" value="<?php echo $quizrun_id ?>"/>
-        <input type="submit" value="volgende"/>
+        <input type="submit" value="<?php echo ($current_question) ? "Volgende vraag" : "Start Quiz"; ?>"/>
     </form>
 <?php } else { ?>
     <h1>Einde</h1>

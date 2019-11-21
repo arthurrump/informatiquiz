@@ -4,8 +4,7 @@ include("helpers/db.php");
 include("helpers/Parsedown.php");
 
 if (!($quiz_run = get_active_quizrun_by_code($_GET["quiz"]))) {
-    http_response_code(404);
-    echo "This quiz doesn't exist.";
+    header("location: /?err=" . $_GET['quiz']);
     exit;
 }
 
