@@ -1,0 +1,36 @@
+h1 {
+    text-align: center;
+}
+
+form {
+    border-radius: 5px;
+    position: absolute;
+    width: 300px;
+    left: 50%;
+    margin: 10px 0 100px -150px;
+    background: #dfeaf3;
+    padding: 32px;
+}
+
+input {
+    width: 100%;
+}
+
+h2 {
+    font-weight: lighter;
+}
+
+#error {
+    color: red;
+}
+
+
+/*@media (prefers-color-scheme: dark) {*/
+/*    body{*/
+/*        background: #1c1c1c;*/
+/*    }*/
+
+/*    h1, label {*/
+/*        color: #eeeeee;*/
+/*    }*/
+/*}*/
