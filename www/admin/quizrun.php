@@ -33,7 +33,7 @@ $parsedown = new Parsedown();
 <html lang="nl">
 <head>
     <title>Admin - Informatiquiz</title>
-<!--  TODO   <meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
+    <!--  TODO   <meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
     <link rel="stylesheet" type="text/css" href="/style.css"/>
 
     <!-- UIkit CSS -->
@@ -76,7 +76,7 @@ $parsedown = new Parsedown();
     if (!!($answers = get_answers_for_quizrun_question($quizrun["id"], $quizrun["current_question"]))) {
         echo "<h2>Resultaten (" . sizeof($answers) . ")</h2>";
 
-// Check if mc:
+        // Check if mc:
         if ($question->type === "mc") {
             echo "<ul>";
             var_dump($answers);
@@ -85,93 +85,81 @@ $parsedown = new Parsedown();
             }
 
             echo "</ul>";
-        } elseif ($question->type === "html") {
-            libxml_use_internal_errors(true); ?>
+        } elseif ($question->type === "html") { ?>
 
-<!--            <div uk-filter="target: .js-filter">-->
-<!---->
-<!--                <div class="uk-grid-small uk-flex-middle" uk-grid>-->
-<!--                    <div class="uk-width-expand">-->
-<!---->
-<!--                        <div class="uk-grid-small uk-grid-divider uk-child-width-auto" uk-grid>-->
-<!--                            <div>-->
-<!--                                <ul class="uk-subnav uk-subnav-pill" uk-margin>-->
-<!--                                    <li class="uk-active" uk-filter-control><a href="#">All</a></li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                            <div>-->
-<!--                                <ul class="uk-subnav uk-subnav-pill" uk-margin>-->
-<!--                                    <li uk-filter-control="[data-color='white']"><a href="#">White</a></li>-->
-<!--                                    <li uk-filter-control="[data-color='blue']"><a href="#">Blue</a></li>-->
-<!--                                    <li uk-filter-control="[data-color='black']"><a href="#">Black</a></li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!---->
-<!--                    </div>-->
-<!--                </div>-->
-<!---->
-<!--                <ul class="js-filter uk-child-width-1-2 uk-child-width-1-3@m uk-text-center" uk-grid="masonry: true">-->
-<!--                    <li data-color="white" data-size="large" data-name="A">-->
-<!--                        <div class="uk-card uk-card-default uk-card-body">-->
-<!--                            <canvas width="600" height="800"></canvas>-->
-<!--                            <div class="uk-position-center">A</div>-->
-<!--                        </div>-->
-<!--                    </li>-->
-<!--                    <li data-color="blue" data-size="small" data-name="B">-->
-<!--                        <div class="uk-card uk-card-primary uk-card-body">-->
-<!--                            <canvas width="600" height="400"></canvas>-->
-<!--                            <div class="uk-position-center">B</div>-->
-<!--                        </div>-->
-<!--                    </li>-->
-<!--      -->
-<!---->
-<!--                    <li data-color="black" data-size="medium" data-name="E">-->
-<!--                        <div class="uk-card uk-card-secondary uk-card-body">-->
-<!--                            <canvas width="600" height="600"></canvas>-->
-<!--                            <div class="uk-position-center">E</div>-->
-<!--                        </div>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
+            <!-- Filtering results on correctness: -->
+            <div uk-filter="target: .js-filter">
+                <div class="uk-grid-small uk-flex-middle" uk-grid>
+                    <div class="uk-width-expand">
 
-
-
-            <div class="uk-child-width-auto uk-grid-column-small uk-grid-row-small" uk-grid>
-                <?php foreach ($answers as $a) { ?>
-                    <div class="uk-card uk-card-default uk-card-body">
-                        <h3 class="uk-card-title">HTML antwoord van ...</h3>
-
-                        <div class="uk-card-default uk-padding-small">
-                            <code>
-                                <?php echo htmlspecialchars($a["answer"]); ?>
-                            </code>
-                        </div>
-
-                        <div class="uk-card-default uk-padding-small">
-                            <h3 class="uk-card-title">Browser:</h3>
-
-                            <?php
-                            $doc = new DOMDocument();
-                            $doc->loadHTML($a["answer"]);
-                            if ($errors = libxml_get_errors()) { ?>
-                                Geen valide HTML!! <br>
-                                <ul class="uk-list-bullet uk-text-danger" uk-list>
-                                <?php foreach ($errors as $error) {
-                                    echo "<li>$error->message</li>";
-                                    ?>
-                                    </ul>
-                                <?php }
-                                libxml_clear_errors();
-                            } else {
-                                echo $a["answer"];
-                            }
-                            ?>
+                        <div class="uk-grid-small uk-grid-divider uk-child-width-auto" uk-grid>
+                            <div>
+                                <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                                    <li class="uk-active" uk-filter-control><a href="#">Alle</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                                    <li uk-filter-control="[data-correct='yes']"><a href="#">Goed</a></li>
+                                    <li uk-filter-control="[data-correct='valid']"><a href="#">Valide HTML, maar
+                                            verkeerd</a></li>
+                                    <li uk-filter-control="[data-correct='no']"><a href="#">Fout</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                <?php } ?>
-            </div>
+                </div>
 
+
+                <!-- The list of all the answers -->
+                <ul class="js-filter uk-child-width-auto" uk-grid>
+
+                    <?php libxml_use_internal_errors(true);
+
+                    foreach ($answers as $a) {
+                        // Check here for correctness of the answer; yes/valid/no
+                        $doc = new DOMDocument();
+                        $doc->loadXML($a["answer"]);
+
+                        // TODO Check for valid xml scheme at question submission
+                        if (libxml_get_errors()) {
+                            $correct = "no";
+                        } elseif ($doc->schemaValidateSource($question->correct)) {
+                            $correct = "yes";
+                        } else {
+                            $correct = "valid";
+                        }
+                        ?>
+                        <li data-correct="<?php echo $correct; ?>">
+                            <div class="uk-card uk-card-default uk-card-body">
+                                <h3 class="uk-card-title">HTML antwoord van ...</h3>
+
+                                <div class="uk-card-default uk-padding-small">
+                                    <code>
+                                        <?php echo htmlspecialchars($a["answer"]); ?>
+                                    </code>
+                                </div>
+
+                                <div class="uk-card-default uk-padding-small">
+                                    <?php
+                                    if ($errors = libxml_get_errors()) { ?>
+                                        Verkeerd:
+                                        <ul class="uk-list uk-list-divider uk-text-danger">
+                                            <?php foreach ($errors as $error) {
+                                                echo "<li>" . htmlspecialchars($error->message) . "</li>";
+                                            }
+                                            libxml_clear_errors();
+                                            ?>
+                                        </ul>
+                                    <?php } else {
+                                        echo $a["answer"];
+                                    } ?>
+                                </div>
+                            </div>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </div>
         <?php }
     }
     ?>
