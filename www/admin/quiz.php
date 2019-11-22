@@ -68,89 +68,95 @@ if (!empty($_POST)) {
 
 </head>
 <body>
-    <h1><?php echo $title; ?></h1>
-    <form method="POST" action="quizrun.php">
-        <input type="hidden" name="quiz_id" value="<?php echo $quiz_id ?>"/>
-        <input type="submit" class="uk-button uk-button-primary uk-border-rounded" value="Start quiz"/>
-    </form>
-    <?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
-        $id = $quiz["id"];
-        $question = $quiz["question"];
-        echo htmlspecialchars($question) . "<br/>";
-    } ?>
+<h1><?php echo $title; ?></h1>
+<form method="POST" action="quizrun.php">
+    <input type="hidden" name="quiz_id" value="<?php echo $quiz_id ?>"/>
+    <input type="submit" class="uk-button uk-button-primary uk-border-rounded" value="Start quiz"/>
+</form>
+<?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
+    $id = $quiz["id"];
+    $question = $quiz["question"];
+    echo htmlspecialchars($question) . "<br/>";
+} ?>
 
-    <h2>Nieuwe vraag</h2>
+<h2>Nieuwe vraag</h2>
 
-    <ul class="errors">
-        <?php foreach ($errors as $err) { ?>
-            <div class="uk-alert-danger" uk-alert>
-                <a class="uk-alert-close" uk-close></a>
-                <p><?php echo $err ?></p>
+<ul class="errors">
+    <?php foreach ($errors as $err) { ?>
+        <div class="uk-alert-danger" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            <p><?php echo $err ?></p>
+        </div>
+    <?php } ?>
+</ul>
+
+<ul uk-tab>
+    <li><a href="#">Meerkeuze</a></li>
+    <li><a href="#">Open HTML</a></li>
+</ul>
+
+<ul class="uk-switcher uk-margin uk-background-muted">
+    <li>
+        <form method="POST" class="uk-padding">
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="question">Vraag</label>
+                <textarea class="uk-textarea" id="question" rows="3" placeholder="Type hier je vraag"
+                          name="question" autofocus></textarea>
             </div>
-        <?php } ?>
-    </ul>
 
-    <ul uk-tab>
-        <li><a href="#">Meerkeuze</a></li>
-        <li><a href="#">Open HTML</a></li>
-    </ul>
+            <div class="uk-padding uk-card-default uk-margin">
+                <legend class="uk-legend">Opties</legend>
 
-    <ul class="uk-switcher uk-margin uk-background-muted">
-        <li>
-            <form method="POST" class="uk-padding">
-
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="question">Vraag</label>
-                    <textarea class="uk-textarea" id="question" rows="3" placeholder="Type hier je vraag"
-                              name="question"></textarea>
-                </div>
-
-                <div class="uk-padding uk-card-default uk-margin">
-                    <legend class="uk-legend">Opties</legend>
-
-                    <div class="answer uk-margin uk-grid-small" uk-grid>
-                        <input type="radio" name="correct" value="1" class="uk-radio uk-margin-left">
-                        <div class="uk-width-1-2@s">
-                            <textarea class="uk-textarea" rows="1" spellcheck="true" name="answer[]"></textarea>
-                        </div>
+                <div class="answer uk-margin uk-grid-small" uk-grid>
+                    <input type="radio" name="correct" value="1" class="uk-radio uk-margin-left">
+                    <div class="uk-width-1-2@s">
+                        <textarea class="uk-textarea" rows="1" spellcheck="true" name="answer[]"></textarea>
                     </div>
+                </div>
 
-                    <div class="answer uk-margin uk-grid-small" uk-grid>
-                        <input type="radio" name="correct" value="2" class="uk-radio uk-margin-left">
-                        <div class="uk-width-1-2@s">
-                            <textarea class="uk-textarea" rows="1" spellcheck="true" name="answer[]"></textarea>
-                        </div>
+                <div class="answer uk-margin uk-grid-small" uk-grid>
+                    <input type="radio" name="correct" value="2" class="uk-radio uk-margin-left">
+                    <div class="uk-width-1-2@s">
+                        <textarea class="uk-textarea" rows="1" spellcheck="true" name="answer[]"></textarea>
                     </div>
-
-                    <button class="uk-button uk-button-primary" type="button" onclick="addOption(this)">
-                        <span uk-icon="plus"></span>
-                        Optie toevoegen
-                    </button>
-                </div>
-                <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
-                       value="Voeg meerkeuze vraag toe"/>
-            </form>
-        </li>
-        <li>
-            <!-- Question where student has to answer with HTML code -->
-            <form method="POST" class="uk-padding">
-
-                <div class="">
-                    <label class="uk-form-label" for="question">Vraag</label>
-                    <textarea class="uk-textarea" id="question" rows="3" placeholder="Type hier je vraag"
-                              name="question"></textarea>
                 </div>
 
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="question">Goede HTML antwoord:</label>
-                    <textarea class="uk-textarea" id="question" rows="5" placeholder="Type hier het HTML antwoord"
-                              name="correct"></textarea>
-                </div>
+                <button class="uk-button uk-button-primary" type="button" onclick="addOption(this)">
+                    <span uk-icon="plus"></span>
+                    Optie toevoegen
+                </button>
+            </div>
+            <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
+                   value="Voeg meerkeuze vraag toe"/>
+        </form>
+    </li>
+    <li>
+        <!-- Question where student has to answer with HTML code -->
+        <form method="POST" class="uk-padding">
 
-                <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
-                       value="Voeg open HTML vraag toe"/>
-            </form>
-        </li>
-    </ul>
+            <div class="">
+                <label class="uk-form-label" for="question">Vraag</label>
+                <textarea class="uk-textarea" id="question" rows="3" placeholder="Type hier je vraag"
+                          name="question"></textarea>
+            </div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="question">Goede HTML antwoord
+                    (<a href="https://www.w3schools.com/XML/schema_intro.asp">XML validatie schema</a>):</label>
+                <textarea class="uk-textarea" id="question" rows="10" name="correct">
+<&quest;xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <!-- Typ hier je validatie van HTML-elementen -->
+
+</xs:schema></textarea>
+            </div>
+
+            <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
+                   value="Voeg open HTML vraag toe"/>
+        </form>
+    </li>
+</ul>
 </body>
 </html>

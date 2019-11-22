@@ -46,7 +46,6 @@ $parsedown = new Parsedown();
 <body class="admin-run">
 <h1 class="uk-heading-medium">Quiz Code: <?php echo $quizrun["access_code"]; ?></h1>
 
-
 <?php if ($quizrun["active"]) {
     if (!!($current_question = get_question($quizrun["current_question"]))) {
         $question = json_decode($current_question); ?>
@@ -74,16 +73,21 @@ $parsedown = new Parsedown();
         </div>
     <?php }
     if (!!($answers = get_answers_for_quizrun_question($quizrun["id"], $quizrun["current_question"]))) {
-        echo "<h2>Resultaten (" . sizeof($answers) . ")</h2>";
+        echo "<h2>Resultaten (" . array_sum(array_map(function ($a) {
+                return $a["count"];
+            }, $answers)) . ")</h2>";
 
         // Check if mc:
         if ($question->type === "mc") {
-            echo "<ul>";
-            var_dump($answers);
-            foreach ($answers as $a) {
-                echo "<li>" . chr(intval($a["answer"]) + 97) . ": " . $a["count"] . "</li>";
-            }
-
+            echo "<ul class='uk-list'>";
+            foreach ($answers as $a) { ?>
+                <li>
+                    <?php echo chr(intval($a["answer"]) + 97) . "(" . $a["count"] . ")" ?> :
+                    <progress class="uk-progress uk-animation-slide-left" value="<?php echo $a["count"] ?>"
+                              max="<?php echo sizeof($answers) ?>"><?php echo sizeof($answers) ?>">
+                    </progress>
+                </li>
+            <?php }
             echo "</ul>";
         } elseif ($question->type === "html") { ?>
 
