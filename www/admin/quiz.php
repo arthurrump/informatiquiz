@@ -55,74 +55,102 @@ if (!empty($_POST)) {
 <html lang="nl">
 <head>
     <title>Admin - Informatiquiz</title>
-    <link rel="stylesheet" type="text/css" href="/style.css"/>
+    <script type="text/javascript" src="js/quiz.js"></script>
+
+    <!--    <link rel="stylesheet" type="text/css" href="/style.css"/>-->
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.2.3/dist/css/uikit.min.css"/>
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.2.3/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.2.3/dist/js/uikit-icons.min.js"></script>
+
 </head>
 <body>
-<h1><?php echo $title; ?></h1>
-<form method="POST" action="quizrun.php">
-    <input type="hidden" name="quiz_id" value="<?php echo $quiz_id ?>"/>
-    <input type="submit" value="Start quiz"/>
-    <script type="text/javascript" src="js/quiz.js"></script>
-</form>
-<?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
-    $id = $quiz["id"];
-    $question = $quiz["question"];
-    echo htmlspecialchars($question) . "<br/>";
-} ?>
-
-<h2>Nieuwe vraag</h2>
-
-
-<fieldset>
-    <legend>Meerkeuze vraag</legend>
-    <form method="POST">
-
-        <ul class="errors">
-            <?php foreach ($errors as $err) {
-                echo "<li>$err</li>";
-            } ?>
-        </ul>
-
-
-        <fieldset>
-            <legend>Vraag</legend>
-            <textarea name="question"></textarea>
-        </fieldset>
-        <fieldset>
-            <legend>Antwoordmogelijkheden</legend>
-            <article class="answer">
-                <input type="radio" name="correct" value="1">
-                <textarea spellcheck="true" name="answer[]"></textarea>
-            </article>
-            <article class="answer">
-                <input type="radio" name="correct" value="2">
-                <textarea spellcheck="true" name="answer[]"></textarea>
-            </article>
-            <button id="add_answer" type="button" onclick="addOption(this)"> Optie toevoegen</button>
-        </fieldset>
-
-        <input type="submit" name="type" value="Voeg meerkeuze vraag toe"/>
+    <h1><?php echo $title; ?></h1>
+    <form method="POST" action="quizrun.php">
+        <input type="hidden" name="quiz_id" value="<?php echo $quiz_id ?>"/>
+        <input type="submit" class="uk-button uk-button-primary uk-border-rounded" value="Start quiz"/>
     </form>
+    <?php foreach (get_questions_for_quiz($quiz_id) as $quiz) {
+        $id = $quiz["id"];
+        $question = $quiz["question"];
+        echo htmlspecialchars($question) . "<br/>";
+    } ?>
 
-</fieldset>
-<br>
+    <h2>Nieuwe vraag</h2>
 
-<!-- Question where student has to answer with HTML code -->
-<fieldset>
-    <legend>Open vraag (HTML)</legend>
-    <form method="POST">
+    <ul class="errors">
+        <?php foreach ($errors as $err) { ?>
+            <div class="uk-alert-danger" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p><?php echo $err ?></p>
+            </div>
+        <?php } ?>
+    </ul>
 
-        <fieldset>
-            <legend>Vraag</legend>
-            <textarea name="question"></textarea>
-        </fieldset>
-        <fieldset>
-            <legend>Goede HTML antwoord</legend>
-            <textarea name="correct"></textarea>
-        </fieldset>
-        <input type="submit" name="type" value="Voeg open vraag (HTML) toe"/>
-    </form>
-</fieldset>
+    <ul uk-tab>
+        <li><a href="#">Meerkeuze</a></li>
+        <li><a href="#">Open HTML</a></li>
+    </ul>
 
+    <ul class="uk-switcher uk-margin uk-background-muted">
+        <li>
+            <form method="POST" class="uk-padding">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="question">Vraag</label>
+                    <textarea class="uk-textarea" id="question" rows="3" placeholder="Type hier je vraag"
+                              name="question"></textarea>
+                </div>
+
+                <div class="uk-padding uk-card-default uk-margin">
+                    <legend class="uk-legend">Opties</legend>
+
+                    <div class="answer uk-margin uk-grid-small" uk-grid>
+                        <input type="radio" name="correct" value="1" class="uk-radio uk-margin-left">
+                        <div class="uk-width-1-2@s">
+                            <textarea class="uk-textarea" rows="1" spellcheck="true" name="answer[]"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="answer uk-margin uk-grid-small" uk-grid>
+                        <input type="radio" name="correct" value="2" class="uk-radio uk-margin-left">
+                        <div class="uk-width-1-2@s">
+                            <textarea class="uk-textarea" rows="1" spellcheck="true" name="answer[]"></textarea>
+                        </div>
+                    </div>
+
+                    <button class="uk-button uk-button-primary" type="button" onclick="addOption(this)">
+                        <span uk-icon="plus"></span>
+                        Optie toevoegen
+                    </button>
+                </div>
+                <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
+                       value="Voeg meerkeuze vraag toe"/>
+            </form>
+        </li>
+        <li>
+            <!-- Question where student has to answer with HTML code -->
+            <form method="POST" class="uk-padding">
+
+                <div class="">
+                    <label class="uk-form-label" for="question">Vraag</label>
+                    <textarea class="uk-textarea" id="question" rows="3" placeholder="Type hier je vraag"
+                              name="question"></textarea>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="question">Goede HTML antwoord:</label>
+                    <textarea class="uk-textarea" id="question" rows="5" placeholder="Type hier het HTML antwoord"
+                              name="correct"></textarea>
+                </div>
+
+                <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
+                       value="Voeg open HTML vraag toe"/>
+            </form>
+        </li>
+    </ul>
 </body>
 </html>

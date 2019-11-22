@@ -45,7 +45,7 @@
             } ?>
         </ul>
         <label for="title">Titel</label>
-        <input type="text" name="title" />
+        <input id="title" type="text" name="title" />
         <input type="submit" value="Maak quiz" />
     </form>
 </body>

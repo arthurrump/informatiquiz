@@ -7,7 +7,7 @@ function addOption(el) {
     item.firstElementChild.setAttribute('value', answers.length + 1);
 
     // Remove any content from the 'template'
-    item.lastElementChild.value = "";
+    item.lastElementChild.firstElementChild.value = "";
 
     el.parentNode.insertBefore(item, el);
 }
