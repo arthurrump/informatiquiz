@@ -17,7 +17,10 @@
         <h2>Doe mee met een quiz!</h2>
         <label for="quiz_code">Quiz code</label>
         <br>
-        <input id="quiz_code" type="number" name="quiz"  min="10000" max="99999" required autofocus/>
+        <input id="quiz_code" type="number" name="quiz" min="10000" max="99999" required autofocus/>
+        <br>
+        <label for="name">Voornaam</label>
+        <input id="name" type="text" name="name" required/>
         <br>
         <input type="submit" value="Doe mee"/>
     </form>

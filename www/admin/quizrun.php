@@ -35,9 +35,24 @@ $parsedown = new Parsedown();
     <title>Admin - Informatiquiz</title>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
     <link rel="stylesheet" type="text/css" href="/style.css"/>
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="../uikit-3.2.3/css/uikit.min.css"/>
+
+    <!-- UIkit JS -->
+    <script src="../uikit-3.2.3/js/uikit.min.js"></script>
+    <script src="../uikit-3.2.3/js/uikit-icons.min.js"></script>
 </head>
 <body class="admin-run">
-<h1 class="access-code">Code: <?php echo $quizrun["access_code"]; ?></h1>
+<h1 class="uk-heading-large">Quiz Code: <?php echo $quizrun["access_code"]; ?></h1>
+<h1 class="uk-text-large uk-heading-2xlarge">Large</h1>
+
+<div class="uk-alert-danger" uk-alert>
+    <a class="uk-alert-close" uk-close></a>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+</div>
+
+
 <?php if ($quizrun["active"]) {
     if (!!($current_question = get_question($quizrun["current_question"]))) {
         $question = json_decode($current_question); ?>
