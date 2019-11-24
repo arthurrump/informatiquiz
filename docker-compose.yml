@@ -9,16 +9,17 @@ services:
       - ./www:/var/www/html
 
   db:
-    image: bitnami/mariadb
+    image: linuxserver/mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
     volumes:
-      - ./db.init:/docker-entrypoint-initdb.d
-      - ./db:/bitnami/mariadb
+      - ./custom.cnf:/config/custom.cnf
+      - ./db:/config/databases
+      - ./db.init:/config/initdb.d
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+  adminer:
+    image: adminer
     restart: always
     ports:
-      - 3000:80
+      - 3000:8080
