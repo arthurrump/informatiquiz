@@ -54,7 +54,7 @@ if ($quiz_run["current_question"] == 0) {
                     echo "<p><input type=\"radio\" name=\"answer\" value=\"$i\" />" . $parsedown->line($question->answers[$i]) . "</p>";
                 }
             } else if ($question->type === "html") {
-                echo '<p><input type="text" name="answer"></p>';
+                echo '<textarea name="answer" lines="10"></textarea>';
             }
             ?>
             <input type="submit" value="Beantwoorden"/>
