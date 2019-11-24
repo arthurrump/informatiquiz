@@ -56,6 +56,7 @@ if (!empty($_POST)) {
 <head>
     <title>Admin - Informatiquiz</title>
     <script type="text/javascript" src="js/quiz.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--    <link rel="stylesheet" type="text/css" href="/style.css"/>-->
 

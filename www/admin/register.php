@@ -36,6 +36,7 @@ if (!empty($_POST)) {
 <html lang="nl">
 <head>
     <title>Admin Register - Informatiquiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- UIkit CSS -->
     <link rel="stylesheet" href="../uikit-3.2.3/css/uikit.min.css"/>

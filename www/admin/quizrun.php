@@ -34,7 +34,7 @@ $parsedown = new Parsedown();
 <head>
     <title>Admin - Informatiquiz</title>
     <!--  TODO   <meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
-    <link rel="stylesheet" type="text/css" href="/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- UIkit CSS -->
     <link rel="stylesheet" href="../uikit-3.2.3/css/uikit.min.css"/>
