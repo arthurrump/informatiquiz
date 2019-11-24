@@ -57,6 +57,9 @@ function create_user($username, $password) {
     }
 
     if (!$stmt->execute()) {
+        if ($db->errno === 1062) {
+            return -1;
+        }
         db_error($db, "Execute failed");
     }
 
