@@ -9,14 +9,14 @@ services:
       - ./www:/var/www/html
 
   db:
-    image: mariadb
+    image: linuxserver/mariadb
     restart: always
-    command: "mysqld --innodb-flush-method=fsync"
     environment:
       MYSQL_ROOT_PASSWORD: password
     volumes:
-      - ./db:/var/lib/mysql
-      - ./db.init:/docker-entrypoint-initdb.d
+      - ./custom.cnf:/config/custom.cnf
+      - ./db:/config/databases
+      - ./db.init:/config/initdb.d
 
   adminer:
     image: adminer
