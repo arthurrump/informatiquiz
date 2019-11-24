@@ -15,13 +15,13 @@
 
     <h1 class="uk-text-center uk-heading-medium">Informatiquiz</h1>
 
-    <form class="uk-padding-large uk-background-muted" submit="get" action="quiz.php">
+    <form class="uk-padding-large uk-background-muted" action="quiz.php">
         <?php
         // Check if user entered wrong Quiz code
         if ($err = htmlentities($_GET["err"])) { ?>
             <div class="uk-alert-danger uk-animation-shake" uk-alert>
                 <a class="uk-alert-close" uk-close></a>
-                <b>Quiz code <?php echo htmlspecialchars($err) ?> bestaat niet.</b>
+                <b>Quiz code <?php echo htmlspecialchars($err) ?> bestaat niet (meer).</b>
             </div>
         <?php } ?>
 
