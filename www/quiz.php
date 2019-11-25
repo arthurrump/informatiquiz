@@ -8,6 +8,8 @@ if (!($quiz_run = get_active_quizrun_by_code($_GET["quiz"]))) {
     exit;
 }
 
+$quizrun_id = $quiz_run["id"];
+
 if (!empty($_POST)) {
     $question_id = $_POST["question"];
     $answer = $_POST["answer"];
@@ -15,12 +17,14 @@ if (!empty($_POST)) {
     $quizcode = $_POST["quizcode"];
 
     add_answer($quizrun_id, $question_id, session_id(), $answer);
+    $_SESSION["answered-$quizrun_id"] = $question_id;
 
-    header("location: /quiz.php?quiz=$quizcode&answered=$question_id");
+    header("location: /quiz.php?quiz=$quizcode");
     exit;
 }
 
-if ($_GET["answered"] == $quiz_run["current_question"]) {
+$answered = $_SESSION["answered-$quizrun_id"];
+if ($answered == $quiz_run["current_question"]) {
     header("refresh: 2");
 }
 
@@ -46,7 +50,7 @@ $parsedown = new Parsedown();
     <p class="uk-padding-small">De quiz is nog niet gestart. Vernieuw <span uk-icon="icon: refresh"></span> de pagina
         als de quiz gestart is.</p>
 
-<?php } else if ($_GET["answered"] == $quiz_run["current_question"]) { ?>
+<?php } else if ($answered == $quiz_run["current_question"]) { ?>
     <p class='uk-padding-small'>Je hebt de vraag beantwoord!</p>
 
 <?php } else {
