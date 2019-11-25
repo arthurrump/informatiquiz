@@ -71,7 +71,7 @@ $parsedown = new Parsedown();
                 <div class="uk-form-controls uk-form-controls-text uk-padding-small">
                     <?php
                     for ($i = 0; $i < sizeof($question->answers); $i++) {
-                        echo '<label class="uk-margin-small uk-text-large"><input class="uk-radio" type="radio" name="answer" value="$i" required>' . $parsedown->line($question->answers[$i]) . "</label><br>";
+                        echo '<label class="uk-margin-small uk-text-large"><input class="uk-radio" type="radio" name="answer" value="' . $i . '" required>' . $parsedown->line($question->answers[$i]) . "</label><br>";
                     } ?>
                 </div>
                 <?php
