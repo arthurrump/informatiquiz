@@ -8,6 +8,11 @@ if (!($quiz_run = get_active_quizrun_by_code($_GET["quiz"]))) {
     exit;
 }
 
+if(empty($_SESSION["name"])) {
+    header("location: /");
+    exit;
+}
+
 $quizrun_id = $quiz_run["id"];
 
 if (!empty($_POST)) {
@@ -15,8 +20,9 @@ if (!empty($_POST)) {
     $answer = $_POST["answer"];
     $quizrun_id = $_POST["quiz"];
     $quizcode = $_POST["quizcode"];
-
-    add_answer($quizrun_id, $question_id, session_id(), $answer);
+    
+    $user = str_replace("::", ":", $_SESSION["name"]) . "::" . session_id();
+    add_answer($quizrun_id, $question_id, $user, $answer);
     $_SESSION["answered-$quizrun_id"] = $question_id;
 
     header("location: /quiz.php?quiz=$quizcode");

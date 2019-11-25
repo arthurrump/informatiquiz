@@ -1,3 +1,23 @@
+<?php
+session_start();
+include("helpers/db.php");
+
+$error = "";
+if (!empty($_POST)) {
+    if (!($quiz_run = get_active_quizrun_by_code($_POST["quiz"]))) {
+        $error = "Quiz code " . htmlspecialchars($_POST["quiz"]) . " bestaat niet (meer).";
+    } else {
+        $_SESSION["name"] = $_POST["name"];
+        header("location: /quiz.php?quiz=" . $_POST["quiz"]);
+        exit;
+    }
+}
+
+if (!empty($_GET["err"])) {
+    $error = "Quiz code " . htmlspecialchars($_GET["err"]) . " bestaat niet (meer).";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -15,13 +35,13 @@
 
     <h1 class="uk-text-center uk-heading-medium">Informatiquiz</h1>
 
-    <form class="uk-padding-large uk-background-muted" action="quiz.php">
+    <form class="uk-padding-large uk-background-muted" method="POST">
         <?php
         // Check if user entered wrong Quiz code
-        if ($err = htmlentities($_GET["err"])) { ?>
+        if (!empty($error)) { ?>
             <div class="uk-alert-danger uk-animation-shake" uk-alert>
                 <a class="uk-alert-close" uk-close></a>
-                <b>Quiz code <?php echo htmlspecialchars($err) ?> bestaat niet (meer).</b>
+                <b><?php echo $error; ?></b>
             </div>
         <?php } ?>
 
