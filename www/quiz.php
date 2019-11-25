@@ -20,6 +20,10 @@ if (!empty($_POST)) {
     exit;
 }
 
+if ($_GET["answered"] == $quiz_run["current_question"]) {
+    header("refresh: 2");
+}
+
 $parsedown = new Parsedown();
 ?>
 
