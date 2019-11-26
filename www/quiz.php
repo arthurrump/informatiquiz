@@ -8,16 +8,30 @@ if (!($quiz_run = get_active_quizrun_by_code($_GET["quiz"]))) {
     exit;
 }
 
+if(empty($_SESSION["name"])) {
+    header("location: /");
+    exit;
+}
+
+$quizrun_id = $quiz_run["id"];
+
 if (!empty($_POST)) {
     $question_id = $_POST["question"];
     $answer = $_POST["answer"];
     $quizrun_id = $_POST["quiz"];
     $quizcode = $_POST["quizcode"];
+    
+    $user = str_replace("::", ":", $_SESSION["name"]) . "::" . session_id();
+    add_answer($quizrun_id, $question_id, $user, $answer);
+    $_SESSION["answered-$quizrun_id"] = $question_id;
 
-    add_answer($quizrun_id, $question_id, session_id(), $answer);
-
-    header("location: /quiz.php?quiz=$quizcode&answered=$question_id");
+    header("location: /quiz.php?quiz=$quizcode");
     exit;
+}
+
+$answered = $_SESSION["answered-$quizrun_id"];
+if ($answered == $quiz_run["current_question"]) {
+    header("refresh: 2");
 }
 
 $parsedown = new Parsedown();
@@ -43,7 +57,7 @@ $parsedown = new Parsedown();
     <p class="uk-padding-small">De quiz is nog niet gestart. Vernieuw <span uk-icon="icon: refresh"></span> de pagina
         als de quiz gestart is.</p>
 
-<?php } else if ($_GET["answered"] == $quiz_run["current_question"]) { ?>
+<?php } else if ($answered == $quiz_run["current_question"]) { ?>
     <p class='uk-padding-small'>Je hebt de vraag beantwoord!</p>
 
 <?php } else {
@@ -64,7 +78,7 @@ $parsedown = new Parsedown();
                 <div class="uk-form-controls uk-form-controls-text uk-padding-small">
                     <?php
                     for ($i = 0; $i < sizeof($question->answers); $i++) {
-                        echo '<label class="uk-margin-small uk-text-large"><input class="uk-radio" type="radio" name="answer" value="$i" required>' . $parsedown->line($question->answers[$i]) . "</label><br>";
+                        echo '<label class="uk-margin-small uk-text-large"><input class="uk-radio" type="radio" name="answer" value="' . $i . '" required>' . $parsedown->line($question->answers[$i]) . "</label><br>";
                     } ?>
                 </div>
                 <?php
