@@ -2,6 +2,7 @@
 session_start();
 include("../helpers/session.php");
 include("../helpers/db.php");
+include "../helpers/check_html.php";
 
 if (!loggedin()) {
     header("location: /admin/login.php");
@@ -35,11 +36,34 @@ if (!empty($_POST)) {
                 $q = array(
                     "type" => $type,
                     "question" => $question,
-                    "answers" => $_POST['answer'],
-                    "correct" => $correct);
+                    "correct" => $correct,
+                    "answers" => $_POST['answer']);
                 break;
 
             case "open_html":
+                // Check if a XSD schema is given
+                if (empty($xsd = $_POST["xsd"])) {
+                    $errors[] = "Voer een XSD schema in";
+                    var_dump($errors);
+                    break;
+                }
+
+                // Check here if XSD is valid for given example answer
+                if (is_correct_html_answer($xsd, $correct) === "yes") {
+                    $q = array(
+                        "type" => $type,
+                        "question" => $question,
+                        "correct" => $correct,
+                        "xsd" => $xsd);
+                } else {
+                    foreach (libxml_get_errors() as $error) {
+                        $errors[] = "Fout validatie XSD: " . $error->message;
+                    }
+                    libxml_clear_errors();
+                }
+
+                break;
+
             case "open_css":
                 $q = array(
                     "type" => $type,
@@ -48,7 +72,9 @@ if (!empty($_POST)) {
                 break;
         }
 
-        create_question_for_quiz($quiz_id, json_encode($q));
+        if ($q) {
+            create_question_for_quiz($quiz_id, json_encode($q));
+        }
     }
 }
 ?>
@@ -133,14 +159,34 @@ if (!empty($_POST)) {
                       name="question"></textarea>
 
             <div class="uk-margin">
-                <label class="uk-form-label" for="answer_html">Correcte HTML antwoord
+                <label class="uk-form-label" for="answer_html">Voorbeeld van een goed HTML antwoord (dit antwoord moet
+                    door het validatieschema hieronder worden goedgekeurd)</label>
+                <textarea class="uk-textarea" id="answer_html" rows="2" name="correct"
+                          placeholder="Typ hier een voorbeeld van een goed HTML antwoord"></textarea>
+            </div>
+
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="validity_html">Validatie van HTML antwoord
                     (<a href="https://www.w3schools.com/XML/schema_intro.asp">XML validatie schema</a>)</label>
-                <textarea class="uk-textarea" id="answer_html" rows="10" name="correct">
-<&quest;xml version="1.0"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+                <textarea class="uk-textarea" id="validity_html" rows="10" name="xsd">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="html">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="body">
+          <xs:complexType>
+            <xs:sequence>
 
-    <!-- Typ hier je validatie van HTML-elementen -->
+              <!-- Typ hier de validatie voor elementen die in de body moeten komen te staan -->
 
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema></textarea>
             </div>
 

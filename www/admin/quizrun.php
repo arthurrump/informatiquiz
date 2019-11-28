@@ -53,17 +53,16 @@ if ($quizrun["active"]) {
             <h3 class="uk-card-title">
                 <?php echo "Vraag " . $quizrun["current_question"] . ": " . $parsedown->text($question->question); ?>
             </h3>
-            <ol type="a">
-                <?php
-                if ($question->type === "mc") {
-                    foreach ($question->answers as $answer) { ?>
+
+            <?php if ($question->type === "closed") { ?>
+                <ol type="a">
+                    <?php foreach ($question->answers as $answer) { ?>
                         <li class="uk-text-large">
                             <?php echo $parsedown->line($answer); ?>
                         </li>
-                    <?php }
-                }
-                ?>
-            </ol>
+                    <?php } ?>
+                </ol>
+            <?php } ?>
 
             <form method="post">
                 <input type="submit" class="uk-button uk-button-primary" value="Toon resultaten">
@@ -124,7 +123,7 @@ if ($quizrun["active"]) {
                     <ul class="js-filter uk-child-width-auto" uk-grid>
                         <?php foreach ($answers as $a) {
                             // Check if answer is correct, this might generate libxml errors ?>
-                            <li data-correct="<?php echo is_correct_html_answer($question->correct, $a); ?>">
+                            <li data-correct="<?php echo is_correct_html_answer($question->xsd, $a["answer"]); ?>">
                                 <div class="uk-card uk-card-default uk-card-body">
                                     <h3 class="uk-card-title">HTML antwoord van ...</h3>
 
