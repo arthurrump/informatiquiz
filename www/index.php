@@ -2,10 +2,10 @@
 session_start();
 include("helpers/db.php");
 
-$error = "";
+$errors = array();
 if (!empty($_POST)) {
     if (!($quiz_run = get_active_quizrun_by_code($_POST["quiz"]))) {
-        $error = "Quiz code " . htmlspecialchars($_POST["quiz"]) . " bestaat niet (meer).";
+        $errors[] = "Quiz code " . htmlspecialchars($_POST["quiz"]) . " bestaat niet (meer).";
     } else {
         $_SESSION["name"] = $_POST["name"];
         header("location: /quiz.php?quiz=" . $_POST["quiz"]);
@@ -14,7 +14,7 @@ if (!empty($_POST)) {
 }
 
 if (!empty($_GET["err"])) {
-    $error = "Quiz code " . htmlspecialchars($_GET["err"]) . " bestaat niet (meer).";
+    $errors[] = "Quiz code " . htmlspecialchars($_GET["err"]) . " bestaat niet (meer).";
 }
 ?>
 
@@ -23,12 +23,7 @@ if (!empty($_GET["err"])) {
 <head>
     <title>Informatiquiz</title>
 
-    <!-- UIkit CSS -->
-    <link rel="stylesheet" href="../uikit-3.2.3/css/uikit.min.css"/>
-
-    <!-- UIkit JS -->
-    <script src="../uikit-3.2.3/js/uikit.min.js"></script>
-    <script src="../uikit-3.2.3/js/uikit-icons.min.js"></script>
+    <?php include 'helpers/head.php' ?>
 </head>
 <body>
 <div class="uk-position-center">
@@ -36,14 +31,8 @@ if (!empty($_GET["err"])) {
     <h1 class="uk-text-center uk-heading-medium">Informatiquiz</h1>
 
     <form class="uk-padding-large uk-background-muted" method="POST">
-        <?php
-        // Check if user entered wrong Quiz code
-        if (!empty($error)) { ?>
-            <div class="uk-alert-danger uk-animation-shake" uk-alert>
-                <a class="uk-alert-close" uk-close></a>
-                <b><?php echo $error; ?></b>
-            </div>
-        <?php } ?>
+
+        <?php include 'helpers/output_errors.php'?>
 
         <h2>Doe mee met een quiz!</h2>
 

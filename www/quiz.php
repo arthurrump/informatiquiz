@@ -8,7 +8,7 @@ if (!($quiz_run = get_active_quizrun_by_code($_GET["quiz"]))) {
     exit;
 }
 
-if(empty($_SESSION["name"])) {
+if (empty($_SESSION["name"])) {
     header("location: /");
     exit;
 }
@@ -20,7 +20,7 @@ if (!empty($_POST)) {
     $answer = $_POST["answer"];
     $quizrun_id = $_POST["quiz"];
     $quizcode = $_POST["quizcode"];
-    
+
     $user = str_replace("::", ":", $_SESSION["name"]) . "::" . session_id();
     add_answer($quizrun_id, $question_id, $user, $answer);
     $_SESSION["answered-$quizrun_id"] = $question_id;
@@ -42,12 +42,7 @@ $parsedown = new Parsedown();
 <head>
     <title>Informatiquiz</title>
 
-    <!-- UIkit CSS -->
-    <link rel="stylesheet" href="../uikit-3.2.3/css/uikit.min.css"/>
-
-    <!-- UIkit JS -->
-    <script src="../uikit-3.2.3/js/uikit.min.js"></script>
-    <script src="../uikit-3.2.3/js/uikit-icons.min.js"></script>
+    <?php include 'helpers/head.php' ?>
 </head>
 <body>
 <h1 class="uk-padding-small">Informatiquiz</h1>
@@ -72,22 +67,33 @@ $parsedown = new Parsedown();
             echo '<input type="hidden" name="quiz" value="' . $quiz_run["id"] . "\" />";
             echo '<input type="hidden" name="quizcode" value="' . $quiz_run["access_code"] . '">';
 
-            // Check for type of question (mc or html)
-            if ($question->type === "mc") { ?>
-                <div class="uk-form-controls uk-form-controls-text uk-padding-small">
+            // Check for type of question
+            switch ($type = $question->type) {
+                case "closed": ?>
+                    <div class="uk-form-controls uk-form-controls-text uk-padding-small">
+                        <?php
+                        for ($i = 0; $i < sizeof($question->answers); $i++) {
+                            echo '<label class="uk-margin-small uk-text-large"><input class="uk-radio" type="radio" name="answer" value="' . $i . '" required>' . $parsedown->line($question->answers[$i]) . "</label><br>";
+                        } ?>
+                    </div>
                     <?php
-                    for ($i = 0; $i < sizeof($question->answers); $i++) {
-                        echo '<label class="uk-margin-small uk-text-large"><input class="uk-radio" type="radio" name="answer" value="' . $i . '" required>' . $parsedown->line($question->answers[$i]) . "</label><br>";
-                    } ?>
-                </div>
-                <?php
-            } else if ($question->type === "html") { ?>
+                    break;
 
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="answer">Jouw HTML antwoord:</label>
-                    <textarea class="uk-textarea" id="answer" rows="5" name="answer"></textarea>
-                </div>
-            <?php } ?>
+                case "open_html": ?>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="answer">Jouw HTML antwoord:</label>
+                        <textarea class="uk-textarea" id="answer" rows="5" name="answer"></textarea>
+                    </div>
+                    <?php break;
+
+                case "open_css": ?>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="answer">Jouw CSS antwoord:</label>
+                        <textarea class="uk-textarea" id="answer" rows="5" name="answer"></textarea>
+                    </div>
+                    <?php break;
+            } ?>
+
 
             <input class="uk-width-1-1 uk-button uk-button-primary uk-button-large" type="submit" name="type"
                    value="Beantwoorden"/>
