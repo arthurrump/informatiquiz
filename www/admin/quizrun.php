@@ -34,14 +34,8 @@ $parsedown = new Parsedown();
 <head>
     <title>Admin - Informatiquiz</title>
     <!--  TODO   <meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- UIkit CSS -->
-    <link rel="stylesheet" href="../uikit-3.2.3/css/uikit.min.css"/>
-
-    <!-- UIkit JS -->
-    <script src="../uikit-3.2.3/js/uikit.min.js"></script>
-    <script src="../uikit-3.2.3/js/uikit-icons.min.js"></script>
+    <?php include '../helpers/head.php' ?>
 </head>
 <body class="admin-run">
 <h1 class="uk-heading-medium">Quiz Code: <?php echo $quizrun["access_code"]; ?></h1>
