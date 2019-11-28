@@ -31,14 +31,8 @@ if (!empty($_GET["err"])) {
     <h1 class="uk-text-center uk-heading-medium">Informatiquiz</h1>
 
     <form class="uk-padding-large uk-background-muted" method="POST">
-        <?php
-        // Check if user entered wrong Quiz code
-        if (!empty($error)) { ?>
-            <div class="uk-alert-danger uk-animation-shake" uk-alert>
-                <a class="uk-alert-close" uk-close></a>
-                <b><?php echo $error; ?></b>
-            </div>
-        <?php } ?>
+
+        <?php include '../helpers/output_errors.php'?>
 
         <h2>Doe mee met een quiz!</h2>
 

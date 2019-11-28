@@ -47,12 +47,7 @@ if (!empty($_POST)) {
     <form class="uk-padding-large uk-background-muted" method="post">
 
         <h2>Registreer</h2>
-        <?php foreach ($errors as $err) { ?>
-            <div class="uk-alert-danger uk-animation-shake" uk-alert>
-                <a class="uk-alert-close" uk-close></a>
-                <?php echo "<b>$err</b>"; ?>
-            </div>
-        <?php } ?>
+        <?php include '../helpers/output_errors.php'?>
 
         <div class="uk-margin">
             <label class="uk-form-label" for="username">Gebruikersnaam</label>
