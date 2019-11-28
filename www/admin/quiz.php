@@ -2,7 +2,7 @@
 session_start();
 include("../helpers/session.php");
 include("../helpers/db.php");
-include "../helpers/check_html.php";
+include "../helpers/check_code.php";
 
 if (!loggedin()) {
     header("location: /admin/login.php");

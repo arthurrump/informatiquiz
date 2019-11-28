@@ -3,7 +3,7 @@ session_start();
 include("../helpers/session.php");
 include("../helpers/db.php");
 include("../helpers/Parsedown.php");
-include("../helpers/check_html.php");
+include("../helpers/check_code.php");
 
 
 if (!loggedin()) {
@@ -153,10 +153,64 @@ if ($quizrun["active"]) {
                 <?php break;
 
             // Open CSS question
-            case "open_css":
+            case "open_css": ?>
 
-                break;
+                <div uk-filter="target: .js-filter">
+                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-width-expand">
 
+                            <div class="uk-grid-small uk-grid-divider uk-child-width-auto" uk-grid>
+                                <div>
+                                    <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                                        <li class="uk-active" uk-filter-control><a href="#">Alle</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                                        <!--                                        <li uk-filter-control="[data-correct='yes']"><a href="#">Goed</a></li>-->
+                                        <li uk-filter-control="[data-correct='valid']"><a href="#">Valide CSS</a></li>
+                                        <li uk-filter-control="[data-correct='no']"><a href="#">Fout(en) in CSS</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The list of all the answers -->
+                    <ul class="js-filter uk-child-width-auto" uk-grid>
+                        <?php foreach ($answers as $a) {
+                            // Check if CSS answer is correct, collect list with errors
+                            // TODO Display these errors nicely
+                            $errors = is_valid_css($a["answer"]);
+
+                            ?>
+                            <li data-correct="<?php echo (empty($errors) ? "valid" : "no"); ?>">
+                                <div class="uk-card uk-card-default uk-card-body">
+                                    <h3 class="uk-card-title">CSS antwoord van ...</h3>
+
+                                    <div class="uk-card-default uk-padding-small">
+                                        <pre><?php echo htmlspecialchars($a["answer"]); ?></pre>
+                                    </div>
+
+<!--                                    <div class="uk-card-default uk-padding-small">
+                                        <?php /*if (!empty($errors)) { */?>
+                                            Verkeerd:
+                                            <ul class="uk-list uk-list-divider uk-text-danger">
+                                                <?php /*foreach ($errors as $error) {
+                                                    echo "<li>" . htmlspecialchars($error) . "</li>";
+                                                }
+                                                */?>
+                                            </ul>
+                                        <?php /*} else {
+                                        } */?>
+                                    </div>
+-->
+                                </div>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <?php break;
         }
         ?>
 
