@@ -81,14 +81,7 @@ if (!empty($_POST)) {
 
 <h2>Nieuwe vraag</h2>
 
-<ul class="errors">
-    <?php foreach ($errors as $err) { ?>
-        <div class="uk-alert-danger" uk-alert>
-            <a class="uk-alert-close" uk-close></a>
-            <p><?php echo $err ?></p>
-        </div>
-    <?php } ?>
-</ul>
+<?php include '../helpers/output_errors.php' ?>
 
 <ul uk-tab>
     <li><a href="#">Meerkeuze</a></li>
@@ -97,6 +90,8 @@ if (!empty($_POST)) {
 </ul>
 
 <ul class="uk-switcher uk-margin uk-background-muted">
+
+    <!-- Question where student has to choice an answer -->
     <li>
         <form method="POST" class="uk-padding">
 
@@ -106,7 +101,7 @@ if (!empty($_POST)) {
                           name="question" autofocus></textarea>
             </div>
 
-            <div class="uk-padding uk-card-default uk-margin">
+            <div class="uk-padding-small uk-card-default uk-margin">
                 <legend class="uk-legend">Opties</legend>
 
                 <div class="answer uk-margin uk-grid-small" uk-grid>
@@ -134,13 +129,14 @@ if (!empty($_POST)) {
             </button>
         </form>
     </li>
+
+    <!-- Question where student has to answer with HTML code -->
     <li>
-        <!-- Question where student has to answer with HTML code -->
         <form method="POST" class="uk-padding">
 
             <label class="uk-form-label" for="question_html">Vraag</label>
-            <textarea class="uk-textarea" id="question_html" rows="3" placeholder="Type hier je vraag" name="question">
-            </textarea>
+            <textarea class="uk-textarea" id="question_html" rows="3" placeholder="Type hier je vraag"
+                      name="question"></textarea>
 
             <div class="uk-margin">
                 <label class="uk-form-label" for="answer_html">Correcte HTML antwoord
@@ -159,6 +155,7 @@ if (!empty($_POST)) {
             </button>
         </form>
     </li>
+
     <!-- Question where student has to answer with CSS code -->
     <li>
         <form method="POST" class="uk-padding">
@@ -168,15 +165,16 @@ if (!empty($_POST)) {
                       name="question"></textarea>
 
             <div class="uk-margin">
-                <label class="uk-form-label" for="answer_css">Correcte CSS antwoord (antwoorden worden alleen
-                    gecontroleerd
-                    op validiteit)</label>
+                <label class="uk-form-label" for="answer_css">
+                    Correcte CSS antwoord (antwoorden worden alleen gecontroleerd op validiteit)
+                </label>
                 <textarea class="uk-textarea" id="answer_css" rows="10" name="correct"
                           placeholder="Typ hier het juiste CSS antwoord"></textarea>
             </div>
 
             <button class="uk-width-1-1 uk-button uk-button-primary uk-button-large"
-                    type="submit" name="type" value="open_css"> Voeg open CSS vraag toe
+                    type="submit" name="type" value="open_css">
+                Voeg open CSS vraag toe
             </button>
         </form>
     </li>

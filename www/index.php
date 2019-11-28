@@ -2,10 +2,10 @@
 session_start();
 include("helpers/db.php");
 
-$error = "";
+$errors = array();
 if (!empty($_POST)) {
     if (!($quiz_run = get_active_quizrun_by_code($_POST["quiz"]))) {
-        $error = "Quiz code " . htmlspecialchars($_POST["quiz"]) . " bestaat niet (meer).";
+        $errors[] = "Quiz code " . htmlspecialchars($_POST["quiz"]) . " bestaat niet (meer).";
     } else {
         $_SESSION["name"] = $_POST["name"];
         header("location: /quiz.php?quiz=" . $_POST["quiz"]);
@@ -14,7 +14,7 @@ if (!empty($_POST)) {
 }
 
 if (!empty($_GET["err"])) {
-    $error = "Quiz code " . htmlspecialchars($_GET["err"]) . " bestaat niet (meer).";
+    $errors[] = "Quiz code " . htmlspecialchars($_GET["err"]) . " bestaat niet (meer).";
 }
 ?>
 
@@ -32,7 +32,7 @@ if (!empty($_GET["err"])) {
 
     <form class="uk-padding-large uk-background-muted" method="POST">
 
-        <?php include '../helpers/output_errors.php'?>
+        <?php include 'helpers/output_errors.php'?>
 
         <h2>Doe mee met een quiz!</h2>
 
