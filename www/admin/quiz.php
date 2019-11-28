@@ -30,25 +30,19 @@ if (!empty($_POST)) {
 
     if (empty($errors)) {
         // Multiple choice, with 2+ answer options
-        switch ($_POST["type"]) {
+        switch ($type = $_POST["type"]) {
             case "closed":
                 $q = array(
-                    "type" => "mc",
+                    "type" => $type,
                     "question" => $question,
                     "answers" => $_POST['answer'],
                     "correct" => $correct);
                 break;
 
             case "open_html":
-                $q = array(
-                    "type" => "html",
-                    "question" => $question,
-                    "correct" => $correct);
-                break;
-
             case "open_css":
                 $q = array(
-                    "type" => "css",
+                    "type" => $type,
                     "question" => $question,
                     "correct" => $correct);
                 break;
