@@ -9,16 +9,19 @@ services:
       - ./www:/var/www/html
     secrets:
       - hackerearth_api_secret
+      - database_password
 
   db:
     image: linuxserver/mariadb
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      FILE__MYSQL_ROOT_PASSWORD: /run/secrets/database_password
     volumes:
       - ./custom.cnf:/config/custom.cnf
       - ./db:/config/databases
       - ./db.init:/config/initdb.d
+    secrets:
+      - database_password
 
   adminer:
     image: adminer
@@ -29,3 +32,5 @@ services:
 secrets:
   hackerearth_api_secret:
     file: ./secrets/hackerearth_api_secret
+  database_password:
+    file: ./secrets/database_password

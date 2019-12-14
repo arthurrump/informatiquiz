@@ -1,6 +1,7 @@
 <?php
 function get_database_connection() {
-    $db = mysqli_connect("db", "root", "password", "informatiquiz");
+    $password = file_get_contents("/run/secrets/database_password");
+    $db = mysqli_connect("db", "root", $password, "informatiquiz");
     if ($mysqli->connect_errno) {
         echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         exit;
