@@ -211,6 +211,82 @@ if ($quizrun["active"]) {
                     </ul>
                 </div>
                 <?php break;
+
+            // Open PHP question
+            case "open_php": ?>
+
+                <div uk-filter="target: .js-filter">
+                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-width-expand">
+
+                            <div class="uk-grid-small uk-grid-divider uk-child-width-auto" uk-grid>
+                                <div>
+                                    <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                                        <li class="uk-active" uk-filter-control><a href="#">Alle</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                                        <li uk-filter-control="[data-correct='correct']"><a href="#">Goed</a></li>
+                                        <li uk-filter-control="[data-correct='no-error']"><a href="#">Geen errors</a></li>
+                                        <li uk-filter-control="[data-correct='compile-error']"><a href="#">Compile error</a></li>
+                                        <li uk-filter-control="[data-correct='runtime-error']"><a href="#">Runtime error</a></li>
+                                        <li uk-filter-control="[data-correct='unknown']"><a href="#">Onbekend</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The list of all the answers -->
+                    <ul class="js-filter uk-child-width-auto" uk-grid>
+                        <?php foreach ($answers as $a) {
+                            $a = json_decode($a["answer"]);
+                            if (!empty($a->result)) {
+                                if (!empty($a->result->compile_error))
+                                    $correct = "compile-error";
+                                elseif (!empty($a->result->runtime_error))
+                                    $correct = "runtime-error";
+                                elseif (trim($a->result->output) === trim($question->expected_output))
+                                    $correct = "correct";
+                                else
+                                    $correct = "no-error";
+                            } else {
+                                $correct = "unknown"; 
+                            } ?>    
+                            <li data-correct="<?php echo $correct; ?>">
+                                <div class="uk-card uk-card-default uk-card-body">
+                                    <h3 class="uk-card-title">Antwoord 
+                                        <?php switch ($correct) {
+                                            case "correct": echo "(Goed)"; break;
+                                            case "no-error": echo "(Geen errors)"; break;
+                                            case "compile-error": echo "(Compile error)"; break;
+                                            case "runtime-error": echo "(Runtime error)"; break;
+                                        } ?>
+                                    </h3>
+
+                                    <div class="uk-card-default uk-padding-small">
+                                        <pre><?php echo htmlspecialchars($a->answer); ?></pre>
+                                    </div>
+
+                                    <div class="uk-card-default uk-padding-small">
+                                        <?php if ($correct === "compile-error" || $correct === "runtime-error") { ?>
+                                            Error:
+                                            <pre class="uk-text-danger"><?php 
+                                                echo htmlspecialchars($a->result->compile_error); 
+                                                echo htmlspecialchars($a->result->runtime_error); 
+                                            ?></pre>
+                                        <?php } elseif (!empty($a->result->output)) {
+                                            echo $a->result->output;
+                                        } ?>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                        <?php } ?>
+                    </ul>
+                </div>
+                <?php break;
         }
         ?>
 

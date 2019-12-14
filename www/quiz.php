@@ -14,12 +14,54 @@ if (empty($_SESSION["name"])) {
 }
 
 $quizrun_id = $quiz_run["id"];
+$question = json_decode(get_question($quiz_run["current_question"]));
 
 if (!empty($_POST)) {
     $question_id = $_POST["question"];
     $answer = $_POST["answer"];
     $quizrun_id = $_POST["quiz"];
     $quizcode = $_POST["quizcode"];
+
+    if ($question->type === "open_php") {
+        function replace_hackerearth_paths($message) {
+            return preg_replace("/\\/hackerearth\\/.*\\.php/", "/index.php", $message);
+        }
+        $hackerearth_api_secret = file_get_contents("/run/secrets/hackerearth_api_secret");
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.hackerearth.com/v3/code/run/",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => array(
+                "client_secret" => $hackerearth_api_secret,
+                "lang" => "PHP",
+                "source" => $answer)
+        ));
+
+        $response = curl_exec($curl);
+        if (curl_error($curl)) {
+            $answer = json_encode(array("answer" => $answer));
+        } else {
+            $result = json_decode($response);
+
+            $php_result = array();
+            if ($result->compile_status !== "OK") {
+                $php_result["compile_error"] = replace_hackerearth_paths($result->compile_status);
+            } else {
+                if (!empty($result->run_status->stderr))
+                    $php_result["runtime_error"] = replace_hackerearth_paths($result->run_status->stderr);
+                $php_result["output"] = $result->run_status->output;
+            }
+                
+            $answer = json_encode(array(
+                "answer" => $answer,
+                "result" => $php_result
+            ));
+        }
+
+        curl_close($curl);
+    }
 
     $user = str_replace("::", ":", $_SESSION["name"]) . "::" . session_id();
     add_answer($quizrun_id, $question_id, $user, $answer);
@@ -54,9 +96,7 @@ $parsedown = new Parsedown();
 <?php } else if ($answered == $quiz_run["current_question"]) { ?>
     <p class='uk-padding-small'>Je hebt de vraag beantwoord!</p>
 
-<?php } else {
-    $question = json_decode(get_question($quiz_run["current_question"]));
-    ?>
+<?php } else { ?>
     <div class="uk-card uk-card-default uk-card-body uk-box-shadow-large">
         <h3 class="uk-card-title">Vraag: </h3>
         <h3 class="uk-text-bold"><?php echo $parsedown->text($question->question) ?></h3>
@@ -90,6 +130,13 @@ $parsedown = new Parsedown();
                     <div class="uk-margin">
                         <label class="uk-form-label" for="answer">Jouw CSS antwoord:</label>
                         <textarea class="uk-textarea" id="answer" rows="5" name="answer"></textarea>
+                    </div>
+                    <?php break;
+
+                case "open_php": ?>
+                    <div class="uk-margin">
+                        <lbael class="uk-form-label" for="answer">Pas de PHP code aan:</label>
+                        <textarea class="uk-textarea" id="answer" rows="5" name="answer"><?php echo $question->given_code; ?></textarea>
                     </div>
                     <?php break;
             } ?>

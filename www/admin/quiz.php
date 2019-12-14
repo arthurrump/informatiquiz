@@ -19,19 +19,26 @@ if (!($title = get_quiz_title($quiz_id))) {
 $errors = array();
 if (!empty($_POST)) {
 
+    $type = $_POST["type"];
     $question = $_POST["question"];
-    $correct = $_POST["correct"];
-
+    
     if (empty($question)) {
         $errors[] = "Vul een vraag in.";
     }
-    if (empty($correct)) {
-        $errors[] = "Kies het juiste antwoord.";
+    
+    switch ($type) {
+        case "closed":
+        case "open_html":
+        case "open_css":
+            $correct = $_POST["correct"];
+            if (empty($correct)) {
+                $errors[] = "Kies het juiste antwoord.";
+            }
     }
 
     if (empty($errors)) {
         // Multiple choice, with 2+ answer options
-        switch ($type = $_POST["type"]) {
+        switch ($type) {
             case "closed":
                 $q = array(
                     "type" => $type,
@@ -70,6 +77,14 @@ if (!empty($_POST)) {
                     "question" => $question,
                     "correct" => $correct);
                 break;
+
+            case "open_php":
+                $q = array(
+                    "type" => $type,
+                    "question" => $question,
+                    "expected_output" => $_POST["expected_output"],
+                    "given_code" => $_POST["given_code"]);
+                break;
         }
 
         if ($q) {
@@ -107,6 +122,7 @@ if (!empty($_POST)) {
     <li><a href="#">Meerkeuze</a></li>
     <li><a href="#">Open HTML</a></li>
     <li><a href="#">Open CSS</a></li>
+    <li><a href="#">Open PHP</a></li>
 </ul>
 
 <ul class="uk-switcher uk-margin uk-background-muted">
@@ -215,6 +231,36 @@ if (!empty($_POST)) {
             <button class="uk-width-1-1 uk-button uk-button-primary uk-button-large"
                     type="submit" name="type" value="open_css">
                 Voeg open CSS vraag toe
+            </button>
+        </form>
+    </li>
+
+    <!-- Question with PHP code -->
+    <li>
+        <form method="POST" class="uk-padding">
+            <label class="uk-form-label" for="question_php">Vraag</label>
+            <textarea class="uk-textarea" id="question_php" rows="3" placeholder="Type hier je vraag"
+                      name="question"></textarea>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="expected_output_php">
+                    Verwachte output van de PHP code
+                </label>
+                <textarea class="uk-textarea" id="expected_output_php" rows="10" name="expected_output"
+                          placeholder="Geef hier de verwachte output van de code"></textarea>
+            </div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="given_code_php">
+                    Gegeven PHP code
+                </label>
+                <textarea class="uk-textarea" id="given_code_php" rows="10" name="given_code"
+                          placeholder="Typ hier de gegeven PHP code, die deelnemers aan kunnen passen"></textarea>
+            </div>
+
+            <button class="uk-width-1-1 uk-button uk-button-primary uk-button-large"
+                    type="submit" name="type" value="open_php">
+                Voeg open PHP vraag toe
             </button>
         </form>
     </li>

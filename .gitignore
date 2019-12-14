@@ -1,1 +1,3 @@
 db/
+secrets/*
+!secrets/README.md

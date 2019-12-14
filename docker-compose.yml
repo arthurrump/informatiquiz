@@ -7,6 +7,8 @@ services:
       - 8080:80
     volumes:
       - ./www:/var/www/html
+    secrets:
+      - hackerearth_api_secret
 
   db:
     image: linuxserver/mariadb
@@ -23,3 +25,7 @@ services:
     restart: always
     ports:
       - 3000:8080
+
+secrets:
+  hackerearth_api_secret:
+    file: ./secrets/hackerearth_api_secret
